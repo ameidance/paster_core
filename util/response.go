@@ -6,7 +6,7 @@ import (
     "github.com/ameidance/paster_core/constant"
 )
 
-func FillBizResp(resp interface{}, status *constant.PasterStatus) {
+func FillBizResp(resp interface{}, status *constant.ErrorStatus) {
     if resp == nil {
         return
     }
