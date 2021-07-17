@@ -19,15 +19,15 @@ type DBConf struct {
 	Name     string `yaml:"name"`
 }
 
-func GetDBConf() (*DBConf, error) {
+func GetDBConfig() (*DBConf, error) {
 	conf := new(DBConf)
 	file, err := ioutil.ReadFile(_DB_CONF_PATH)
 	if err != nil {
-		logger.Errorf("[GetDBConf] open file failed. err:%v", err)
+		logger.Errorf("[GetDBConfig] open file failed. err:%v", err)
 		return nil, err
 	}
 	if err = yaml.Unmarshal(file, conf); err != nil {
-		logger.Errorf("[GetDBConf] unmarshal file failed. err:%v", err)
+		logger.Errorf("[GetDBConfig] unmarshal file failed. err:%v", err)
 		return nil, err
 	}
 	return conf, nil
