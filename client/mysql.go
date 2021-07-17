@@ -14,7 +14,7 @@ var (
 )
 
 func InitDB() {
-	dbConf, err := conf.GetDBConf()
+	dbConf, err := conf.GetDBConfig()
 	if dbConf == nil || err != nil {
 		panic(err)
 	}
