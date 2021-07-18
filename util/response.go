@@ -1,25 +1,25 @@
 package util
 
 import (
-    "reflect"
+	"reflect"
 
-    "github.com/ameidance/paster_core/constant"
+	"github.com/ameidance/paster_core/constant"
 )
 
 func FillBizResp(resp interface{}, status *constant.ErrorStatus) {
-    if resp == nil {
-        return
-    }
-    if status == nil {
-        status = constant.ERR_SERVICE_INTERNAL
-    }
+	if resp == nil {
+		return
+	}
+	if status == nil {
+		status = constant.ERR_SERVICE_INTERNAL
+	}
 
-    respType := reflect.TypeOf(resp)
-    respVal := reflect.ValueOf(resp)
-    if respType.Kind() == reflect.Ptr {
-        respVal = respVal.Elem()
-    }
+	respType := reflect.TypeOf(resp)
+	respVal := reflect.ValueOf(resp)
+	if respType.Kind() == reflect.Ptr {
+		respVal = respVal.Elem()
+	}
 
-    respVal.FieldByName("StatusCode").SetInt(int64(status.StatusCode))
-    respVal.FieldByName("StatusMessage").SetString(status.StatusMsg)
+	respVal.FieldByName("StatusCode").SetInt(int64(status.StatusCode))
+	respVal.FieldByName("StatusMessage").SetString(status.StatusMsg)
 }
