@@ -3,7 +3,7 @@
 Paster 服务端核心模块，使用字节跳动开源的微服务 RPC 框架 [KiteX](https://github.com/cloudwego/kitex)
 ，以 [Apache Thrift](https://github.com/apache/thrift) 作为通信协议。
 
-**Todo:** 
+**Todo:**
 
 - [ ] 实现 KiteX 服务注册扩展接口，使用 Consul 服务注册
 - [ ] 新增 frame 层，通过 PreProcessor, PostProcessor 优化 KiteX 框架请求处理日志
@@ -109,39 +109,43 @@ service PasterCoreService {
 
 ```sql
 SET NAMES utf8mb4;
-SET FOREIGN_KEY_CHECKS = 0;
+SET
+FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
 -- Table structure for comment
 -- ----------------------------
 DROP TABLE IF EXISTS `comment`;
-CREATE TABLE `comment` (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '评论自增 ID',
-  `post_id` bigint NOT NULL COMMENT '文本自增 ID',
-  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '评论内容',
-  `nickname` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '评论人昵称',
-  `create_time` timestamp NULL DEFAULT NULL COMMENT '创建时间',
-  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  PRIMARY KEY (`id`),
-  KEY `idx_fk_post_id` (`post_id`),
-  CONSTRAINT `idx_fk_post_id` FOREIGN KEY (`post_id`) REFERENCES `post` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+CREATE TABLE `comment`
+(
+    `id`          bigint                                                       NOT NULL AUTO_INCREMENT COMMENT '评论自增 ID',
+    `post_id`     bigint                                                       NOT NULL COMMENT '文本自增 ID',
+    `content`     text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '评论内容',
+    `nickname`    varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '评论人昵称',
+    `create_time` timestamp NULL DEFAULT NULL COMMENT '创建时间',
+    `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+    KEY           `idx_fk_post_id` (`post_id`),
+    CONSTRAINT `idx_fk_post_id` FOREIGN KEY (`post_id`) REFERENCES `post` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Table structure for post
 -- ----------------------------
 DROP TABLE IF EXISTS `post`;
-CREATE TABLE `post` (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '文本自增 ID',
-  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '文本内容',
-  `lang` smallint NOT NULL DEFAULT '0' COMMENT '文本语言',
-  `passwd` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '密码',
-  `nickname` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '文本作者昵称',
-  `is_disposable` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否阅后即焚',
-  `create_time` timestamp NULL DEFAULT NULL COMMENT '创建时间',
-  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  PRIMARY KEY (`id`)
+CREATE TABLE `post`
+(
+    `id`            bigint                                                       NOT NULL AUTO_INCREMENT COMMENT '文本自增 ID',
+    `content`       text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '文本内容',
+    `lang`          smallint                                                     NOT NULL DEFAULT '0' COMMENT '文本语言',
+    `passwd`        varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci         DEFAULT NULL COMMENT '密码',
+    `nickname`      varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '文本作者昵称',
+    `is_disposable` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否阅后即焚',
+    `create_time`   timestamp NULL DEFAULT NULL COMMENT '创建时间',
+    `update_time`   timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-SET FOREIGN_KEY_CHECKS = 1;
+SET
+FOREIGN_KEY_CHECKS = 1;
 ```
