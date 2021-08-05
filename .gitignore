@@ -1,3 +1,4 @@
 .idea
-output/
-conf/mysql.yml
+output
+conf/*.yml
+!conf/*.example.yml
