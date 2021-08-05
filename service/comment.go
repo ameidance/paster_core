@@ -8,7 +8,7 @@ import (
 	"github.com/ameidance/paster_core/model/dto/kitex_gen/ameidance/paster/core"
 	"github.com/ameidance/paster_core/model/po"
 	"github.com/ameidance/paster_core/util"
-	"github.com/bytedance/gopkg/util/logger"
+	"github.com/cloudwego/kitex/pkg/klog"
 )
 
 func GetComments(ctx context.Context, req *core.GetCommentsRequest) *core.GetCommentsResponse {
@@ -40,7 +40,7 @@ func GetComments(ctx context.Context, req *core.GetCommentsRequest) *core.GetCom
 		return resp
 	}
 	// PO->DTO
-	commentsDTO, err := po.Comments(commentsPO).ConvertToDTO(ctx, req.GetPassword())
+	commentsDTO, err := po.Comments(commentsPO).ConvertToDTO(req.GetPassword())
 	if err != nil {
 		util.FillBizResp(resp, constant.ERR_SERVICE_INTERNAL)
 		return resp
@@ -75,12 +75,12 @@ func SaveComment(ctx context.Context, req *core.SaveCommentRequest) *core.SaveCo
 	// DTO->PO
 	commentDTO := req.GetInfo()
 	if commentDTO == nil {
-		logger.CtxErrorf(ctx, "[SaveComment] comment info empty")
+		klog.Errorf("[SaveComment] comment info empty")
 		util.FillBizResp(resp, constant.ERR_SERVICE_INTERNAL)
 		return resp
 	}
 	commentPO := new(po.Comment)
-	err = commentPO.ConvertFromDTO(ctx, commentDTO, req.GetPostId(), req.GetPassword())
+	err = commentPO.ConvertFromDTO(commentDTO, req.GetPostId(), req.GetPassword())
 	if err != nil {
 		util.FillBizResp(resp, constant.ERR_SERVICE_INTERNAL)
 		return resp
@@ -89,7 +89,7 @@ func SaveComment(ctx context.Context, req *core.SaveCommentRequest) *core.SaveCo
 	commentMgr := po.CommentMgr(client.DBClient)
 	res := commentMgr.Save(commentPO)
 	if res.Error != nil {
-		logger.CtxErrorf(ctx, "[SaveComment] save comment failed. err:%v", res.Error)
+		klog.Errorf("[SaveComment] save comment failed. err:%v", res.Error)
 		util.FillBizResp(resp, constant.ERR_SERVICE_INTERNAL)
 		return resp
 	}

@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/bytedance/gopkg/util/logger"
+	"github.com/cloudwego/kitex/pkg/klog"
 	"gopkg.in/yaml.v3"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -24,13 +24,13 @@ func InitDB() {
 	dsn := dbConf.User + ":" + dbConf.Password + "@tcp(" + dbConf.Hostname + ":" + strconv.Itoa(dbConf.Port) +
 		")/" + dbConf.Name + "?charset=utf8mb4&parseTime=True&loc=Local"
 	if DBClient, err = gorm.Open(mysql.Open(dsn), &gorm.Config{}); err != nil {
-		logger.Errorf("[InitDB] connect db failed. err:%v", err)
+		klog.Errorf("[InitDB] connect db failed. err:%v", err)
 		panic(err)
 	}
 
 	migrator := DBClient.Migrator()
 	if !migrator.HasTable("post") && !migrator.HasTable("comment") {
-		logger.Info("[InitDB] migrating...")
+		klog.Info("[InitDB] migrating...")
 		dbScript, err := getDBScript()
 		if err != nil {
 			panic(err)
@@ -63,11 +63,11 @@ func getDBConfig() (*_DBConf, error) {
 	conf := new(_DBConf)
 	file, err := ioutil.ReadFile(_DB_CONF_PATH)
 	if err != nil {
-		logger.Errorf("[getDBConfig] open file failed. err:%v", err)
+		klog.Errorf("[getDBConfig] open file failed. err:%v", err)
 		return nil, err
 	}
 	if err = yaml.Unmarshal(file, conf); err != nil {
-		logger.Errorf("[getDBConfig] unmarshal file failed. err:%v", err)
+		klog.Errorf("[getDBConfig] unmarshal file failed. err:%v", err)
 		return nil, err
 	}
 	return conf, nil
@@ -76,7 +76,7 @@ func getDBConfig() (*_DBConf, error) {
 func getDBScript() (string, error) {
 	file, err := ioutil.ReadFile(_DB_SCRIPT_PATH)
 	if err != nil {
-		logger.Errorf("[getDBScript] open file failed. err:%v", err)
+		klog.Errorf("[getDBScript] open file failed. err:%v", err)
 		return "", err
 	}
 	return string(file), nil

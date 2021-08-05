@@ -9,7 +9,7 @@ import (
 	"github.com/ameidance/paster_core/model/po"
 	"github.com/ameidance/paster_core/util"
 	"github.com/apache/thrift/lib/go/thrift"
-	"github.com/bytedance/gopkg/util/logger"
+	"github.com/cloudwego/kitex/pkg/klog"
 )
 
 func GetPost(ctx context.Context, req *core.GetPostRequest) *core.GetPostResponse {
@@ -35,7 +35,7 @@ func GetPost(ctx context.Context, req *core.GetPostRequest) *core.GetPostRespons
 	}
 
 	// PO->DTO
-	postDTO, err := postPO.ConvertToDTO(ctx, req.GetPassword())
+	postDTO, err := postPO.ConvertToDTO(req.GetPassword())
 	if err != nil {
 		util.FillBizResp(resp, constant.ERR_SERVICE_INTERNAL)
 		return resp
@@ -52,12 +52,12 @@ func SavePost(ctx context.Context, req *core.SavePostRequest) *core.SavePostResp
 	// DTO->PO
 	postDTO := req.GetInfo()
 	if postDTO == nil {
-		logger.CtxErrorf(ctx, "[SavePost] post info empty")
+		klog.Errorf("[SavePost] post info empty")
 		util.FillBizResp(resp, constant.ERR_SERVICE_INTERNAL)
 		return resp
 	}
 	postPO := new(po.Post)
-	err := postPO.ConvertFromDTO(ctx, postDTO, req.GetPassword())
+	err := postPO.ConvertFromDTO(postDTO, req.GetPassword())
 	if err != nil {
 		util.FillBizResp(resp, constant.ERR_SERVICE_INTERNAL)
 		return resp
@@ -66,7 +66,7 @@ func SavePost(ctx context.Context, req *core.SavePostRequest) *core.SavePostResp
 	mgr := po.PostMgr(client.DBClient)
 	res := mgr.Save(postPO)
 	if res.Error != nil {
-		logger.CtxErrorf(ctx, "[SavePost] save post failed. err:%v", res.Error)
+		klog.Errorf("[SavePost] save post failed. err:%v", res.Error)
 		util.FillBizResp(resp, constant.ERR_SERVICE_INTERNAL)
 		return resp
 	}
@@ -84,7 +84,7 @@ func DeletePost(ctx context.Context, req *core.DeletePostRequest) *core.DeletePo
 		ID: req.GetId(),
 	})
 	if res.Error != nil {
-		logger.CtxErrorf(ctx, "[DeletePost] delete post failed. err:%v", res.Error)
+		klog.Errorf("[DeletePost] delete post failed. err:%v", res.Error)
 		util.FillBizResp(resp, constant.ERR_SERVICE_INTERNAL)
 		return resp
 	}
