@@ -64,11 +64,11 @@ func getDBConfig() (*_DBConf, error) {
 	conf := new(_DBConf)
 	file, err := ioutil.ReadFile(_DB_CONF_PATH)
 	if err != nil {
-		logger.Errorf("[GetDBConfig] open file failed. err:%v", err)
+		logger.Errorf("[getDBConfig] open file failed. err:%v", err)
 		return nil, err
 	}
 	if err = yaml.Unmarshal(file, conf); err != nil {
-		logger.Errorf("[GetDBConfig] unmarshal file failed. err:%v", err)
+		logger.Errorf("[getDBConfig] unmarshal file failed. err:%v", err)
 		return nil, err
 	}
 	return conf, nil
@@ -77,7 +77,7 @@ func getDBConfig() (*_DBConf, error) {
 func getDBScript() (string, error) {
 	file, err := ioutil.ReadFile(_DB_SCRIPT_PATH)
 	if err != nil {
-		logger.Errorf("[GetDBScript] open file failed. err:%v", err)
+		logger.Errorf("[getDBScript] open file failed. err:%v", err)
 		return "", err
 	}
 	return string(file), nil
