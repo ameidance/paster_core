@@ -5,7 +5,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/ameidance/paster_core/model/po"
 	"github.com/bytedance/gopkg/util/logger"
 	"gopkg.in/yaml.v3"
 	"gorm.io/driver/mysql"
@@ -30,7 +29,8 @@ func InitDB() {
 	}
 
 	migrator := DBClient.Migrator()
-	if !migrator.HasTable(&po.Post{}) && !migrator.HasTable(&po.Comment{}) {
+	if !migrator.HasTable("post") && !migrator.HasTable("comment") {
+		logger.Info("[InitDB] migrating...")
 		dbScript, err := getDBScript()
 		if err != nil {
 			panic(err)
@@ -38,8 +38,7 @@ func InitDB() {
 		sqls := strings.Split(dbScript, ";")
 		for _, sql := range sqls {
 			if sql = strings.Trim(sql, "\n"); len(sql) > 0 {
-				DBClient = DBClient.Exec(sql)
-				if err = DBClient.Error; err != nil {
+				if err = DBClient.Exec(sql).Error; err != nil {
 					panic(err)
 				}
 			}
