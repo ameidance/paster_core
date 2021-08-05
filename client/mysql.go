@@ -2,8 +2,10 @@ package client
 
 import (
 	"strconv"
+	"strings"
 
 	"github.com/ameidance/paster_core/conf"
+	"github.com/ameidance/paster_core/model/po"
 	"github.com/bytedance/gopkg/util/logger"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -21,9 +23,25 @@ func InitDB() {
 	// https://github.com/go-sql-driver/mysql#dsn-data-source-name
 	dsn := dbConf.User + ":" + dbConf.Password + "@tcp(" + dbConf.Hostname + ":" + strconv.Itoa(dbConf.Port) +
 		")/" + dbConf.Name + "?charset=utf8mb4&parseTime=True&loc=Local"
-
 	if DBClient, err = gorm.Open(mysql.Open(dsn), &gorm.Config{}); err != nil {
 		logger.Errorf("[InitDB] connect db failed. err:%v", err)
 		panic(err)
+	}
+
+	migrator := DBClient.Migrator()
+	if !migrator.HasTable(&po.Post{}) && !migrator.HasTable(&po.Comment{}) {
+		dbScript, err := conf.GetDBScript()
+		if err != nil {
+			panic(err)
+		}
+		sqls := strings.Split(dbScript, ";")
+		for _, sql := range sqls {
+			if sql = strings.Trim(sql, "\n"); len(sql) > 0 {
+				DBClient = DBClient.Exec(sql)
+				if err = DBClient.Error; err != nil {
+					panic(err)
+				}
+			}
+		}
 	}
 }
