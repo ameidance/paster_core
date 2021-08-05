@@ -1,7 +1,7 @@
 # paster_core
 
-Paster 服务端核心模块，使用字节跳动开源的微服务 RPC 框架 [KiteX](https://github.com/cloudwego/kitex)
-，以 [Thrift](https://github.com/apache/thrift) 作为通信协议。
+Paster 服务端核心模块，使用字节跳动开源的微服务 RPC 框架 [KiteX](https://github.com/cloudwego/kitex) 通过 Thrift 
+协议与上游门面模块 [paster_facade](https://github.com/ameidance/paster_facade) 通信。
 
 **Todo:**
 
