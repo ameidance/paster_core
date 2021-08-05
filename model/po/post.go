@@ -9,7 +9,7 @@ import (
 	"github.com/ameidance/paster_core/model/dto/kitex_gen/ameidance/paster/core"
 	"github.com/ameidance/paster_core/util"
 	"github.com/apache/thrift/lib/go/thrift"
-	"github.com/bytedance/gopkg/util/logger"
+	"github.com/cloudwego/kitex/pkg/klog"
 	"gorm.io/gorm"
 )
 
@@ -250,14 +250,14 @@ func (obj *_PostMgr) FetchByPrimaryKey(id int64) (result Post, err error) {
 	return
 }
 
-func (post *Post) ConvertToDTO(ctx context.Context, password string) (*core.PostInfo, error) {
+func (post *Post) ConvertToDTO(password string) (*core.PostInfo, error) {
 	if post == nil {
 		return nil, nil
 	}
 
 	encryptedData, err := base64.StdEncoding.DecodeString(post.Content)
 	if err != nil {
-		logger.CtxErrorf(ctx, "[Post -> ConvertToDTO] base64 decode failed. err:%v", err)
+		klog.Errorf("[Post -> ConvertToDTO] base64 decode failed. err:%v", err)
 		return nil, err
 	}
 	decryptedData := encryptedData
@@ -265,7 +265,7 @@ func (post *Post) ConvertToDTO(ctx context.Context, password string) (*core.Post
 	if len(password) > 0 {
 		decryptedData, err = util.AesDecrypt(encryptedData, util.GetAesKeyFromString(password))
 		if err != nil {
-			logger.CtxErrorf(ctx, "[Post -> ConvertToDTO] aes decrypt failed. err:%v", err)
+			klog.Errorf("[Post -> ConvertToDTO] aes decrypt failed. err:%v", err)
 			return nil, err
 		}
 	}
@@ -279,7 +279,7 @@ func (post *Post) ConvertToDTO(ctx context.Context, password string) (*core.Post
 	}, nil
 }
 
-func (post *Post) ConvertFromDTO(ctx context.Context, info *core.PostInfo, password string) error {
+func (post *Post) ConvertFromDTO(info *core.PostInfo, password string) error {
 	if info == nil {
 		return nil
 	}
@@ -297,7 +297,7 @@ func (post *Post) ConvertFromDTO(ctx context.Context, info *core.PostInfo, passw
 		var err error
 		encryptedData, err = util.AesEncrypt([]byte(info.GetContent()), util.GetAesKeyFromString(password))
 		if err != nil {
-			logger.CtxErrorf(ctx, "[Post -> ConvertFromDTO] aes encrypt failed. err:%v", err)
+			klog.Errorf("[Post -> ConvertFromDTO] aes encrypt failed. err:%v", err)
 			return err
 		}
 	}

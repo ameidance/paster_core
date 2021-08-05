@@ -9,7 +9,7 @@ import (
 	"github.com/ameidance/paster_core/model/dto/kitex_gen/ameidance/paster/core"
 	"github.com/ameidance/paster_core/util"
 	"github.com/apache/thrift/lib/go/thrift"
-	"github.com/bytedance/gopkg/util/logger"
+	"github.com/cloudwego/kitex/pkg/klog"
 	"gorm.io/gorm"
 )
 
@@ -360,7 +360,7 @@ func (obj *_CommentMgr) FetchIndexByIDxFkPostID(postID int64) (results []*Commen
 
 type Comments []*Comment
 
-func (comments Comments) ConvertToDTO(ctx context.Context, password string) ([]*core.CommentInfo, error) {
+func (comments Comments) ConvertToDTO(password string) ([]*core.CommentInfo, error) {
 	if len(comments) == 0 {
 		return nil, nil
 	}
@@ -369,7 +369,7 @@ func (comments Comments) ConvertToDTO(ctx context.Context, password string) ([]*
 	for _, comment := range comments {
 		encryptedData, err := base64.StdEncoding.DecodeString(comment.Content)
 		if err != nil {
-			logger.CtxErrorf(ctx, "[Comments -> ConvertToDTO] base64 decode failed. err:%v", err)
+			klog.Errorf("[Comments -> ConvertToDTO] base64 decode failed. err:%v", err)
 			return nil, err
 		}
 		decryptedData := encryptedData
@@ -377,7 +377,7 @@ func (comments Comments) ConvertToDTO(ctx context.Context, password string) ([]*
 		if len(password) > 0 {
 			decryptedData, err = util.AesDecrypt(encryptedData, util.GetAesKeyFromString(password))
 			if err != nil {
-				logger.CtxErrorf(ctx, "[Comments -> ConvertToDTO] aes decrypt failed. err:%v", err)
+				klog.Errorf("[Comments -> ConvertToDTO] aes decrypt failed. err:%v", err)
 				return nil, err
 			}
 		}
@@ -391,7 +391,7 @@ func (comments Comments) ConvertToDTO(ctx context.Context, password string) ([]*
 	return result, nil
 }
 
-func (comment *Comment) ConvertFromDTO(ctx context.Context, info *core.CommentInfo, postId int64, password string) error {
+func (comment *Comment) ConvertFromDTO(info *core.CommentInfo, postId int64, password string) error {
 	if info == nil {
 		return nil
 	}
@@ -407,7 +407,7 @@ func (comment *Comment) ConvertFromDTO(ctx context.Context, info *core.CommentIn
 		var err error
 		encryptedData, err = util.AesEncrypt([]byte(info.GetContent()), util.GetAesKeyFromString(password))
 		if err != nil {
-			logger.CtxErrorf(ctx, "[Comment -> ConvertFromDTO] aes encrypt failed. err:%v", err)
+			klog.Errorf("[Comment -> ConvertFromDTO] aes encrypt failed. err:%v", err)
 			return err
 		}
 	}
