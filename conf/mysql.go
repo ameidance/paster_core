@@ -9,6 +9,7 @@ import (
 
 const (
 	_DB_CONF_PATH = "conf/mysql.yml"
+	_DB_SCRIPT_PATH = "conf/paster.sql"
 )
 
 type DBConf struct {
@@ -31,4 +32,13 @@ func GetDBConfig() (*DBConf, error) {
 		return nil, err
 	}
 	return conf, nil
+}
+
+func GetDBScript() (string, error) {
+	file, err := ioutil.ReadFile(_DB_SCRIPT_PATH)
+	if err != nil {
+		logger.Errorf("[GetDBScript] open file failed. err:%v", err)
+		return "", err
+	}
+	return string(file), nil
 }
