@@ -1,12 +1,13 @@
 package client
 
 import (
+	"io/ioutil"
 	"strconv"
 	"strings"
 
-	"github.com/ameidance/paster_core/conf"
 	"github.com/ameidance/paster_core/model/po"
 	"github.com/bytedance/gopkg/util/logger"
+	"gopkg.in/yaml.v3"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -16,7 +17,7 @@ var (
 )
 
 func InitDB() {
-	dbConf, err := conf.GetDBConfig()
+	dbConf, err := getDBConfig()
 	if dbConf == nil || err != nil {
 		panic(err)
 	}
@@ -30,7 +31,7 @@ func InitDB() {
 
 	migrator := DBClient.Migrator()
 	if !migrator.HasTable(&po.Post{}) && !migrator.HasTable(&po.Comment{}) {
-		dbScript, err := conf.GetDBScript()
+		dbScript, err := getDBScript()
 		if err != nil {
 			panic(err)
 		}
@@ -44,4 +45,40 @@ func InitDB() {
 			}
 		}
 	}
+}
+
+const (
+	_DB_CONF_PATH   = "conf/mysql.yml"
+	_DB_SCRIPT_PATH = "conf/paster.sql"
+)
+
+type _DBConf struct {
+	User     string `yaml:"user"`
+	Password string `yaml:"password"`
+	Hostname string `yaml:"hostname"`
+	Port     int    `yaml:"port"`
+	Name     string `yaml:"name"`
+}
+
+func getDBConfig() (*_DBConf, error) {
+	conf := new(_DBConf)
+	file, err := ioutil.ReadFile(_DB_CONF_PATH)
+	if err != nil {
+		logger.Errorf("[GetDBConfig] open file failed. err:%v", err)
+		return nil, err
+	}
+	if err = yaml.Unmarshal(file, conf); err != nil {
+		logger.Errorf("[GetDBConfig] unmarshal file failed. err:%v", err)
+		return nil, err
+	}
+	return conf, nil
+}
+
+func getDBScript() (string, error) {
+	file, err := ioutil.ReadFile(_DB_SCRIPT_PATH)
+	if err != nil {
+		logger.Errorf("[GetDBScript] open file failed. err:%v", err)
+		return "", err
+	}
+	return string(file), nil
 }
