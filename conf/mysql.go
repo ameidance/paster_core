@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	_DB_CONF_PATH = "conf/mysql.yml"
+	_DB_CONF_PATH   = "conf/mysql.yml"
 	_DB_SCRIPT_PATH = "conf/paster.sql"
 )
 
