@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/ameidance/paster_core/constant"
 	"github.com/cloudwego/kitex/pkg/klog"
 	"gopkg.in/yaml.v3"
 	"gorm.io/driver/mysql"
@@ -46,11 +47,6 @@ func InitDB() {
 	}
 }
 
-const (
-	_DB_CONF_PATH   = "conf/mysql.yml"
-	_DB_SCRIPT_PATH = "conf/paster.sql"
-)
-
 type _DBConf struct {
 	User     string `yaml:"user"`
 	Password string `yaml:"password"`
@@ -61,7 +57,7 @@ type _DBConf struct {
 
 func getDBConfig() (*_DBConf, error) {
 	conf := new(_DBConf)
-	file, err := ioutil.ReadFile(_DB_CONF_PATH)
+	file, err := ioutil.ReadFile(constant.DB_CONF_PATH)
 	if err != nil {
 		klog.Errorf("[getDBConfig] open file failed. err:%v", err)
 		return nil, err
@@ -74,7 +70,7 @@ func getDBConfig() (*_DBConf, error) {
 }
 
 func getDBScript() (string, error) {
-	file, err := ioutil.ReadFile(_DB_SCRIPT_PATH)
+	file, err := ioutil.ReadFile(constant.DB_SCRIPT_PATH)
 	if err != nil {
 		klog.Errorf("[getDBScript] open file failed. err:%v", err)
 		return "", err
