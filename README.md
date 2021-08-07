@@ -5,7 +5,7 @@ Paster 服务端核心模块，使用字节跳动开源的微服务 RPC 框架 [
 
 **Todo:**
 
-- [x] 实现 KiteX 服务注册扩展接口，使用 Consul 服务注册
+- [x] 实现 KiteX 服务注册扩展接口，使用 [Consul](https://github.com/hashicorp/consul) 服务注册
 - [ ] 新增 frame 层 Processor 优化 KiteX 框架请求响应日志
 - [ ] 将项目打包成 Dokcer 镜像
 - [ ] ...
