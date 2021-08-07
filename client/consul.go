@@ -5,7 +5,6 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"strconv"
-	"strings"
 
 	"github.com/ameidance/paster_core/constant"
 	"github.com/cloudwego/kitex/pkg/klog"
@@ -15,12 +14,14 @@ import (
 )
 
 var (
+	ConsulConf   *_ConsulConf
 	ConsulClient *api.Client
 )
 
 type _ConsulConf struct {
-	Hostname string `yaml:"hostname"`
-	Port     int    `yaml:"port"`
+	Hostname      string `yaml:"hostname"`
+	Port          int    `yaml:"port"`
+	LocalHostname string `yaml:"local_hostname"`
 }
 
 func getConsulConfig() (*_ConsulConf, error) {
@@ -38,12 +39,13 @@ func getConsulConfig() (*_ConsulConf, error) {
 }
 
 func InitConsul() {
-	address, err := getConsulConfig()
-	if address == nil || err != nil {
+	var err error
+	ConsulConf, err = getConsulConfig()
+	if ConsulConf == nil || err != nil {
 		panic(err)
 	}
 	config := api.DefaultConfig()
-	config.Address = fmt.Sprintf("%v:%v", address.Hostname, address.Port)
+	config.Address = fmt.Sprintf("%v:%v", ConsulConf.Hostname, ConsulConf.Port)
 	ConsulClient, err = api.NewClient(config)
 	if ConsulClient == nil || err != nil {
 		panic(err)
@@ -51,14 +53,19 @@ func InitConsul() {
 }
 
 type ConsulRegistry struct {
-	ServiceName string
-	InstanceId  string
+	ServiceName   string
+	InstanceId    string
+	LocalHostname string
 }
 
 func NewConsulRegistry() *ConsulRegistry {
+	if ConsulConf == nil {
+		return nil
+	}
 	return &ConsulRegistry{
-		ServiceName: constant.SERVICE_NAME,
-		InstanceId:  strconv.Itoa(rand.Int()),
+		ServiceName:   constant.SERVICE_NAME,
+		InstanceId:    strconv.Itoa(rand.Int()),
+		LocalHostname: ConsulConf.LocalHostname,
 	}
 }
 
@@ -67,31 +74,17 @@ func (m *ConsulRegistry) Register(info *registry.Info) (err error) {
 		return nil
 	}
 
-	var host string
-	var port int
-	addr := strings.Split(info.Addr.String(), ":")
-	if len(addr) != 2 {
-		klog.Errorf("[ConsulRegistry -> Register] registry info addr split failed.")
-		return fmt.Errorf("registry info addr split failed")
-	}
-	port, err = strconv.Atoi(addr[1])
-	if err != nil {
-		klog.Errorf("[ConsulRegistry -> Register] registry info addr port atoi failed. err:%v", err)
-		return
-	}
-	if len(addr[0]) > 0 {
-		host = addr[0]
-	} else {
-		// use local ip by default
-		host = "localhost"
-	}
-
 	registration := new(api.AgentServiceRegistration)
 	registration.ID = m.InstanceId
 	registration.Name = m.ServiceName
-	registration.Address = host
-	registration.Port = port
+	registration.Address = m.LocalHostname
+	_, err = fmt.Sscanf(info.Addr.String(), ":%v", &registration.Port)
+	if err != nil {
+		klog.Errorf("[ConsulRegistry -> Register] get registry info addr port failed. err:%v", err)
+		return
+	}
 
+	klog.Infof("[ConsulRegistry -> Register] registering... instance id:%v", m.InstanceId)
 	return ConsulClient.Agent().ServiceRegister(registration)
 }
 
@@ -99,5 +92,7 @@ func (m *ConsulRegistry) Deregister(info *registry.Info) error {
 	if ConsulClient == nil {
 		return nil
 	}
+
+	klog.Infof("[ConsulRegistry -> Register] deregistering... instance id:%v", m.InstanceId)
 	return ConsulClient.Agent().ServiceDeregister(m.InstanceId)
 }
