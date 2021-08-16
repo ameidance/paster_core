@@ -5,14 +5,14 @@ import (
 
 	"github.com/ameidance/paster_core/client"
 	"github.com/ameidance/paster_core/constant"
-	"github.com/ameidance/paster_core/model/dto/kitex_gen/ameidance/paster/core"
+	"github.com/ameidance/paster_core/model/dto/kitex_gen/core"
 	"github.com/ameidance/paster_core/model/po"
 	"github.com/ameidance/paster_core/util"
 	"github.com/cloudwego/kitex/pkg/klog"
 )
 
 func GetComments(ctx context.Context, req *core.GetCommentsRequest) *core.GetCommentsResponse {
-	resp := core.NewGetCommentsResponse()
+	resp := &core.GetCommentsResponse{}
 	util.FillBizResp(resp, constant.SUCCESS)
 
 	postMgr := po.PostMgr(client.DBClient)
@@ -46,12 +46,12 @@ func GetComments(ctx context.Context, req *core.GetCommentsRequest) *core.GetCom
 		return resp
 	}
 
-	resp.SetInfo(commentsDTO)
+	resp.Info = commentsDTO
 	return resp
 }
 
 func SaveComment(ctx context.Context, req *core.SaveCommentRequest) *core.SaveCommentResponse {
-	resp := core.NewSaveCommentResponse()
+	resp := &core.SaveCommentResponse{}
 	util.FillBizResp(resp, constant.SUCCESS)
 
 	postMgr := po.PostMgr(client.DBClient)

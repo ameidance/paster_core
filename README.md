@@ -1,7 +1,7 @@
 # paster_core
 
 Paster 服务端核心模块，使用字节跳动开源的微服务 RPC 框架 [KiteX](https://github.com/cloudwego/kitex)
-通过 [Thrift](https://github.com/apache/thrift) 协议与上游门面模块 [paster_facade](https://github.com/ameidance/paster_facade) 通信。
+通过 [gRPC](https://github.com/grpc/grpc-go) 协议与上游门面模块 [paster_facade](https://github.com/ameidance/paster_facade) 通信。
 
 <details>
 <summary><b>时序图</b></summary>
@@ -21,7 +21,7 @@ Paster 服务端核心模块，使用字节跳动开源的微服务 RPC 框架 [
 
 - `kitex.yml` 为 KiteX 框架服务启动配置，默认端口号为 8888。
 - `mysql.yml` 为 MySQL 连接配置，其中 `name` 为数据库名，**需要预先建立数据库**。
-- `consul.yml` 为 Consul 连接配置，其中 `port` 为注册中心端口号，`check_port` 为当前服务用以响应健康检查的端口号。
+- `consul.yml` 为 Consul 连接配置，其中 `port` 为注册中心端口号。
 
 配置完成后在项目根目录下执行以下命令来构建、运行项目。
 
@@ -31,3 +31,11 @@ sh output/bootstrap.sh
 ```
 
 > ⚠️ 请确保在运行项目前已经按照配置信息启动 MySQL 和 Consul 服务端。
+
+### Todo
+
+- [x] 实现 KiteX 服务注册扩展接口，支持 Consul 服务注册
+- [x] 使用 gRPC 替换 Thrift 消息协议，支持 Consul 健康检查
+- [ ] 优化 frame 层中间件完善请求响应日志（依赖下一版本 KiteX）
+- [ ] 将项目打包成 Dokcer 镜像
+- [ ] ...

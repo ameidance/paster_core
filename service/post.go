@@ -5,15 +5,14 @@ import (
 
 	"github.com/ameidance/paster_core/client"
 	"github.com/ameidance/paster_core/constant"
-	"github.com/ameidance/paster_core/model/dto/kitex_gen/ameidance/paster/core"
+	"github.com/ameidance/paster_core/model/dto/kitex_gen/core"
 	"github.com/ameidance/paster_core/model/po"
 	"github.com/ameidance/paster_core/util"
-	"github.com/apache/thrift/lib/go/thrift"
 	"github.com/cloudwego/kitex/pkg/klog"
 )
 
 func GetPost(ctx context.Context, req *core.GetPostRequest) *core.GetPostResponse {
-	resp := core.NewGetPostResponse()
+	resp := &core.GetPostResponse{}
 	util.FillBizResp(resp, constant.SUCCESS)
 
 	mgr := po.PostMgr(client.DBClient)
@@ -41,12 +40,12 @@ func GetPost(ctx context.Context, req *core.GetPostRequest) *core.GetPostRespons
 		return resp
 	}
 
-	resp.SetInfo(postDTO)
+	resp.Info = postDTO
 	return resp
 }
 
 func SavePost(ctx context.Context, req *core.SavePostRequest) *core.SavePostResponse {
-	resp := core.NewSavePostResponse()
+	resp := &core.SavePostResponse{}
 	util.FillBizResp(resp, constant.SUCCESS)
 
 	// DTO->PO
@@ -71,12 +70,12 @@ func SavePost(ctx context.Context, req *core.SavePostRequest) *core.SavePostResp
 		return resp
 	}
 
-	resp.SetId(thrift.Int64Ptr(postPO.ID))
+	resp.Id = postPO.ID
 	return resp
 }
 
 func DeletePost(ctx context.Context, req *core.DeletePostRequest) *core.DeletePostResponse {
-	resp := core.NewDeletePostResponse()
+	resp := &core.DeletePostResponse{}
 	util.FillBizResp(resp, constant.SUCCESS)
 
 	mgr := po.PostMgr(client.DBClient)

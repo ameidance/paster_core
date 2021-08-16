@@ -6,9 +6,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/ameidance/paster_core/model/dto/kitex_gen/ameidance/paster/core"
+	"github.com/ameidance/paster_core/model/dto/kitex_gen/core"
 	"github.com/ameidance/paster_core/util"
-	"github.com/apache/thrift/lib/go/thrift"
 	"github.com/cloudwego/kitex/pkg/klog"
 	"gorm.io/gorm"
 )
@@ -384,7 +383,7 @@ func (comments Comments) ConvertToDTO(password string) ([]*core.CommentInfo, err
 		result = append(result, &core.CommentInfo{
 			Content:    string(decryptedData),
 			Nickname:   comment.Nickname,
-			CreateTime: thrift.Int64Ptr(comment.CreateTime.Unix()),
+			CreateTime: comment.CreateTime.Unix(),
 		})
 	}
 

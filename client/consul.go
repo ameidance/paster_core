@@ -3,8 +3,6 @@ package client
 import (
 	"fmt"
 	"io/ioutil"
-	"net/http"
-	"sync/atomic"
 
 	"github.com/ameidance/paster_core/constant"
 	"github.com/ameidance/paster_core/frame"
@@ -16,15 +14,13 @@ import (
 )
 
 var (
-	consulCheckCounter int64
-	consulConf         *_ConsulConf
-	consulClient       *api.Client
+	consulConf   *_ConsulConf
+	consulClient *api.Client
 )
 
 type _ConsulConf struct {
-	Hostname  string `yaml:"hostname"`
-	Port      int    `yaml:"port"`
-	CheckPort int    `yaml:"check_port"`
+	Hostname string `yaml:"hostname"`
+	Port     int    `yaml:"port"`
 }
 
 func InitConsul() {
@@ -39,7 +35,6 @@ func InitConsul() {
 	if consulClient == nil || err != nil {
 		panic(err)
 	}
-	go healthCheckHandler(consulConf.CheckPort)
 }
 
 type ConsulRegistry struct {
@@ -68,7 +63,7 @@ func (m *ConsulRegistry) Register(info *registry.Info) (err error) {
 	}
 
 	registration.Check = new(api.AgentServiceCheck)
-	registration.Check.HTTP = fmt.Sprintf("http://%s:%d/health", registration.Address, consulConf.CheckPort)
+	registration.Check.GRPC = fmt.Sprintf("%s:%d/%s", registration.Address, registration.Port, registration.Name)
 	registration.Check.Timeout = "5s"
 	registration.Check.Interval = "5s"
 	registration.Check.DeregisterCriticalServiceAfter = "10s"
@@ -98,14 +93,4 @@ func getConsulConfig() (*_ConsulConf, error) {
 		return nil, err
 	}
 	return conf, nil
-}
-
-func healthCheckHandler(port int) {
-	http.HandleFunc("/health", func(writer http.ResponseWriter, request *http.Request) {
-		atomic.AddInt64(&consulCheckCounter, 1)
-		//klog.Debugf("[healthCheckHandler] counter:%v", atomic.LoadInt64(&consulCheckCounter))
-	})
-	if err := http.ListenAndServe(fmt.Sprintf(":%d", port), nil); err != nil {
-		klog.Errorf("[healthCheckHandler] serve failed. err:%v", err)
-	}
 }

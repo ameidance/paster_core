@@ -11,22 +11,14 @@ import (
 
 var _ endpoint.Middleware = LogMiddleware
 
-type args interface {
-	GetFirstArgument() interface{}
-}
-
-type result interface {
-	GetResult() interface{}
-}
-
 func LogMiddleware(next endpoint.Endpoint) endpoint.Endpoint {
 	return func(ctx context.Context, req, resp interface{}) (err error) {
-		method := rpcinfo.GetRPCInfo(ctx).To().Method()
-		klog.Debugf("[LogMiddleware] rpc method:%v, request:%v", method, util.GetJsonString(req.(args).GetFirstArgument()))
+		method := rpcinfo.GetRPCInfo(ctx).Invocation().MethodName()
+		klog.Debugf("[LogMiddleware] rpc method:%v, request:%v", method, util.GetJsonString(req))
 		if err = next(ctx, req, resp); err != nil {
 			return
 		}
-		klog.Debugf("[LogMiddleware] rpc method:%v, response:%v", method, util.GetJsonString(resp.(result).GetResult()))
+		klog.Debugf("[LogMiddleware] rpc method:%v, response:%v", method, util.GetJsonString(resp))
 		return nil
 	}
 }

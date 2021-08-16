@@ -6,9 +6,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/ameidance/paster_core/model/dto/kitex_gen/ameidance/paster/core"
+	"github.com/ameidance/paster_core/model/dto/kitex_gen/core"
 	"github.com/ameidance/paster_core/util"
-	"github.com/apache/thrift/lib/go/thrift"
 	"github.com/cloudwego/kitex/pkg/klog"
 	"gorm.io/gorm"
 )
@@ -275,7 +274,7 @@ func (post *Post) ConvertToDTO(password string) (*core.PostInfo, error) {
 		Language:     core.LanguageType(post.Lang),
 		Nickname:     post.Nickname,
 		IsDisposable: post.IsDisposable,
-		CreateTime:   thrift.Int64Ptr(post.CreateTime.Unix()),
+		CreateTime:   post.CreateTime.Unix(),
 	}, nil
 }
 
