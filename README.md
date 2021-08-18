@@ -31,11 +31,3 @@ sh output/bootstrap.sh
 ```
 
 > ⚠️ 请确保在运行项目前已经按照配置信息启动 MySQL 和 Consul 服务端。
-
-### Todo
-
-- [x] 实现 KiteX 服务注册扩展接口，支持 Consul 服务注册
-- [x] 使用 gRPC 替换 Thrift 消息协议，支持 Consul 健康检查
-- [ ] 优化 frame 层中间件完善请求响应日志（依赖下一版本 KiteX）
-- [ ] 将项目打包成 Dokcer 镜像
-- [ ] ...
