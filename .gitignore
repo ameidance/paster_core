@@ -1,4 +1,5 @@
 .idea
 output
+vendor
 conf/*.yml
 !conf/*.example.yml
