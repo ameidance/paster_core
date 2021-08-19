@@ -19,9 +19,9 @@ Paster 服务端核心模块，使用字节跳动开源的微服务 RPC 框架 [
 
 首先复制 `conf` 目录下所有 `*.example.yml` 配置文件并重命名为 `*.yml`，之后逐一配置。
 
-- `kitex.yml` 为 KiteX 框架服务启动配置，默认端口号为 8888。
-- `mysql.yml` 为 MySQL 连接配置，其中 `name` 为数据库名，**需要预先建立数据库**。
-- `consul.yml` 为 Consul 连接配置，其中 `port` 为注册中心端口号。
+- `kitex.yml` 为 KiteX 框架服务启动配置，默认端口号为 8888
+- `mysql.yml` 为 MySQL 连接配置，其中 `name` 为数据库名，**需要预先建立数据库**
+- `consul.yml` 为 Consul 连接配置，其中 `port` 为注册中心端口号
 
 配置完成后在项目根目录下执行以下命令来构建、运行项目。
 
