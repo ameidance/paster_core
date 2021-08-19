@@ -37,7 +37,7 @@ func (s *PasterCoreImpl) SaveComment(ctx context.Context, req *core.SaveCommentR
 
 // Check implements the PasterCoreImpl interface.
 func (s *PasterCoreImpl) Check(ctx context.Context, req *core.HealthCheckRequest) (resp *core.HealthCheckResponse, err error) {
-	return &core.HealthCheckResponse{Status: core.HealthCheckResponse_SERVING}, nil
+	return &core.HealthCheckResponse{Status: core.ServingStatus_SERVING}, nil
 }
 
 func (s *PasterCoreImpl) Watch(req *core.HealthCheckRequest, stream core.PasterCore_WatchServer) (err error) {
