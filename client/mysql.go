@@ -17,13 +17,13 @@ var (
 )
 
 func InitDB() {
-	dbConf, err := getDBConfig()
-	if dbConf == nil || err != nil {
+	conf, err := getDBConfig()
+	if conf == nil || err != nil {
 		panic(err)
 	}
 	// https://github.com/go-sql-driver/mysql#dsn-data-source-name
-	dsn := dbConf.User + ":" + dbConf.Password + "@tcp(" + dbConf.Hostname + ":" + strconv.Itoa(dbConf.Port) +
-		")/" + dbConf.Name + "?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := conf.User + ":" + conf.Password + "@tcp(" + conf.Hostname + ":" + strconv.Itoa(conf.Port) +
+		")/" + conf.Name + "?charset=utf8mb4&parseTime=True&loc=Local"
 	if DBClient, err = gorm.Open(mysql.Open(dsn), &gorm.Config{}); err != nil {
 		klog.Errorf("[InitDB] connect db failed. err:%v", err)
 		panic(err)
@@ -47,7 +47,7 @@ func InitDB() {
 	}
 }
 
-type _DBConf struct {
+type dbConf struct {
 	User     string `yaml:"user"`
 	Password string `yaml:"password"`
 	Hostname string `yaml:"hostname"`
@@ -55,8 +55,8 @@ type _DBConf struct {
 	Name     string `yaml:"name"`
 }
 
-func getDBConfig() (*_DBConf, error) {
-	conf := new(_DBConf)
+func getDBConfig() (*dbConf, error) {
+	conf := new(dbConf)
 	file, err := ioutil.ReadFile(constant.DB_CONF_PATH)
 	if err != nil {
 		klog.Errorf("[getDBConfig] open file failed. err:%v", err)

@@ -14,23 +14,23 @@ import (
 )
 
 var (
-	consulConf   *_ConsulConf
+	_consulConf  *consulConf
 	consulClient *api.Client
 )
 
-type _ConsulConf struct {
+type consulConf struct {
 	Hostname string `yaml:"hostname"`
 	Port     int    `yaml:"port"`
 }
 
 func InitConsul() {
 	var err error
-	consulConf, err = getConsulConfig()
-	if consulConf == nil || err != nil {
+	_consulConf, err = getConsulConfig()
+	if _consulConf == nil || err != nil {
 		panic(err)
 	}
 	config := api.DefaultConfig()
-	config.Address = fmt.Sprintf("%v:%v", consulConf.Hostname, consulConf.Port)
+	config.Address = fmt.Sprintf("%v:%v", _consulConf.Hostname, _consulConf.Port)
 	consulClient, err = api.NewClient(config)
 	if consulClient == nil || err != nil {
 		panic(err)
@@ -41,7 +41,7 @@ type ConsulRegistry struct {
 }
 
 func NewConsulRegistry() *ConsulRegistry {
-	if consulConf == nil {
+	if _consulConf == nil {
 		return nil
 	}
 	return &ConsulRegistry{}
@@ -81,8 +81,8 @@ func (m *ConsulRegistry) Deregister(info *registry.Info) error {
 	return consulClient.Agent().ServiceDeregister(frame.GetInstanceId())
 }
 
-func getConsulConfig() (*_ConsulConf, error) {
-	conf := new(_ConsulConf)
+func getConsulConfig() (*consulConf, error) {
+	conf := new(consulConf)
 	file, err := ioutil.ReadFile(constant.CONSUL_CONF_PATH)
 	if err != nil {
 		klog.Errorf("[getConsulConfig] open file failed. err:%v", err)
