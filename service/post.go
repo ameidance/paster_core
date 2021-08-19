@@ -12,7 +12,7 @@ import (
 )
 
 func GetPost(ctx context.Context, req *core.GetPostRequest) *core.GetPostResponse {
-	resp := &core.GetPostResponse{}
+	resp := new(core.GetPostResponse)
 	util.FillBizResp(resp, constant.SUCCESS)
 
 	mgr := po.PostMgr(client.DBClient)
@@ -45,7 +45,7 @@ func GetPost(ctx context.Context, req *core.GetPostRequest) *core.GetPostRespons
 }
 
 func SavePost(ctx context.Context, req *core.SavePostRequest) *core.SavePostResponse {
-	resp := &core.SavePostResponse{}
+	resp := new(core.SavePostResponse)
 	util.FillBizResp(resp, constant.SUCCESS)
 
 	// DTO->PO
@@ -75,7 +75,7 @@ func SavePost(ctx context.Context, req *core.SavePostRequest) *core.SavePostResp
 }
 
 func DeletePost(ctx context.Context, req *core.DeletePostRequest) *core.DeletePostResponse {
-	resp := &core.DeletePostResponse{}
+	resp := new(core.DeletePostResponse)
 	util.FillBizResp(resp, constant.SUCCESS)
 
 	mgr := po.PostMgr(client.DBClient)

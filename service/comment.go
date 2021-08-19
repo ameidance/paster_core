@@ -12,7 +12,7 @@ import (
 )
 
 func GetComments(ctx context.Context, req *core.GetCommentsRequest) *core.GetCommentsResponse {
-	resp := &core.GetCommentsResponse{}
+	resp := new(core.GetCommentsResponse)
 	util.FillBizResp(resp, constant.SUCCESS)
 
 	postMgr := po.PostMgr(client.DBClient)
@@ -51,7 +51,7 @@ func GetComments(ctx context.Context, req *core.GetCommentsRequest) *core.GetCom
 }
 
 func SaveComment(ctx context.Context, req *core.SaveCommentRequest) *core.SaveCommentResponse {
-	resp := &core.SaveCommentResponse{}
+	resp := new(core.SaveCommentResponse)
 	util.FillBizResp(resp, constant.SUCCESS)
 
 	postMgr := po.PostMgr(client.DBClient)
