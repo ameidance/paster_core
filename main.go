@@ -12,7 +12,8 @@ func main() {
 	client.InitDB()
 	client.InitConsul()
 
-	srv := pastercore.NewServer(new(PasterCoreImpl), server.WithServerBasicInfo(frame.EBI), server.WithRegistry(client.NewConsulRegistry()))
+	srv := pastercore.NewServer(new(PasterCoreImpl), server.WithServiceAddr(frame.Address),
+		server.WithServerBasicInfo(frame.EBI), server.WithRegistry(client.NewConsulRegistry()))
 	if err := srv.Run(); err != nil {
 		klog.Errorf("[main] server stopped with error. err:%v", err)
 		panic(err)
