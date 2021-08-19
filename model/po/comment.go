@@ -359,13 +359,13 @@ func (obj *_CommentMgr) FetchIndexByIDxFkPostID(postID int64) (results []*Commen
 
 type Comments []*Comment
 
-func (comments Comments) ConvertToDTO(password string) ([]*core.CommentInfo, error) {
-	if len(comments) == 0 {
+func (po Comments) ConvertToDTO(password string) ([]*core.CommentInfo, error) {
+	if len(po) == 0 {
 		return nil, nil
 	}
 
-	result := make([]*core.CommentInfo, 0)
-	for _, comment := range comments {
+	dto := make([]*core.CommentInfo, 0)
+	for _, comment := range po {
 		encryptedData, err := base64.StdEncoding.DecodeString(comment.Content)
 		if err != nil {
 			klog.Errorf("[Comments -> ConvertToDTO] base64 decode failed. err:%v", err)
@@ -380,37 +380,37 @@ func (comments Comments) ConvertToDTO(password string) ([]*core.CommentInfo, err
 				return nil, err
 			}
 		}
-		result = append(result, &core.CommentInfo{
+		dto = append(dto, &core.CommentInfo{
 			Content:    string(decryptedData),
 			Nickname:   comment.Nickname,
 			CreateTime: comment.CreateTime.Unix(),
 		})
 	}
 
-	return result, nil
+	return dto, nil
 }
 
-func (comment *Comment) ConvertFromDTO(info *core.CommentInfo, postId int64, password string) error {
-	if info == nil {
+func (po *Comment) ConvertFromDTO(dto *core.CommentInfo, postId int64, password string) error {
+	if dto == nil {
 		return nil
 	}
 
-	comment.PostID = postId
-	comment.Nickname = info.GetNickname()
-	comment.CreateTime = time.Now()
-	comment.UpdateTime = time.Now()
+	po.PostID = postId
+	po.Nickname = dto.GetNickname()
+	po.CreateTime = time.Now()
+	po.UpdateTime = time.Now()
 
-	encryptedData := []byte(info.GetContent())
+	encryptedData := []byte(dto.GetContent())
 	// encrypt when password exists
 	if len(password) > 0 {
 		var err error
-		encryptedData, err = util.AesEncrypt([]byte(info.GetContent()), util.GetAesKeyFromString(password))
+		encryptedData, err = util.AesEncrypt([]byte(dto.GetContent()), util.GetAesKeyFromString(password))
 		if err != nil {
 			klog.Errorf("[Comment -> ConvertFromDTO] aes encrypt failed. err:%v", err)
 			return err
 		}
 	}
-	comment.Content = base64.StdEncoding.EncodeToString(encryptedData)
+	po.Content = base64.StdEncoding.EncodeToString(encryptedData)
 
 	return nil
 }

@@ -249,12 +249,12 @@ func (obj *_PostMgr) FetchByPrimaryKey(id int64) (result Post, err error) {
 	return
 }
 
-func (post *Post) ConvertToDTO(password string) (*core.PostInfo, error) {
-	if post == nil {
+func (po *Post) ConvertToDTO(password string) (*core.PostInfo, error) {
+	if po == nil {
 		return nil, nil
 	}
 
-	encryptedData, err := base64.StdEncoding.DecodeString(post.Content)
+	encryptedData, err := base64.StdEncoding.DecodeString(po.Content)
 	if err != nil {
 		klog.Errorf("[Post -> ConvertToDTO] base64 decode failed. err:%v", err)
 		return nil, err
@@ -271,36 +271,36 @@ func (post *Post) ConvertToDTO(password string) (*core.PostInfo, error) {
 
 	return &core.PostInfo{
 		Content:      string(decryptedData),
-		Language:     core.LanguageType(post.Lang),
-		Nickname:     post.Nickname,
-		IsDisposable: post.IsDisposable,
-		CreateTime:   post.CreateTime.Unix(),
+		Language:     core.LanguageType(po.Lang),
+		Nickname:     po.Nickname,
+		IsDisposable: po.IsDisposable,
+		CreateTime:   po.CreateTime.Unix(),
 	}, nil
 }
 
-func (post *Post) ConvertFromDTO(info *core.PostInfo, password string) error {
-	if info == nil {
+func (po *Post) ConvertFromDTO(dto *core.PostInfo, password string) error {
+	if dto == nil {
 		return nil
 	}
 
-	post.Lang = int16(info.GetLanguage())
-	post.Nickname = info.GetNickname()
-	post.IsDisposable = info.GetIsDisposable()
-	post.CreateTime = time.Now()
-	post.UpdateTime = time.Now()
+	po.Lang = int16(dto.GetLanguage())
+	po.Nickname = dto.GetNickname()
+	po.IsDisposable = dto.GetIsDisposable()
+	po.CreateTime = time.Now()
+	po.UpdateTime = time.Now()
 
-	encryptedData := []byte(info.GetContent())
+	encryptedData := []byte(dto.GetContent())
 	// encrypt when password exists
 	if len(password) > 0 {
-		post.Passwd = util.GetMd5String([]byte(password))
+		po.Passwd = util.GetMd5String([]byte(password))
 		var err error
-		encryptedData, err = util.AesEncrypt([]byte(info.GetContent()), util.GetAesKeyFromString(password))
+		encryptedData, err = util.AesEncrypt([]byte(dto.GetContent()), util.GetAesKeyFromString(password))
 		if err != nil {
 			klog.Errorf("[Post -> ConvertFromDTO] aes encrypt failed. err:%v", err)
 			return err
 		}
 	}
-	post.Content = base64.StdEncoding.EncodeToString(encryptedData)
+	po.Content = base64.StdEncoding.EncodeToString(encryptedData)
 
 	return nil
 }
