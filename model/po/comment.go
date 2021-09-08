@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/ameidance/paster_core/model/dto/kitex_gen/core"
+	"github.com/ameidance/paster_core/model/dto/kitex_gen/paster/core"
 	"github.com/ameidance/paster_core/util"
 	"github.com/cloudwego/kitex/pkg/klog"
 	"gorm.io/gorm"

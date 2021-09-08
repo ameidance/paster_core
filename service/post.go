@@ -5,7 +5,7 @@ import (
 
 	"github.com/ameidance/paster_core/client"
 	"github.com/ameidance/paster_core/constant"
-	"github.com/ameidance/paster_core/model/dto/kitex_gen/core"
+	"github.com/ameidance/paster_core/model/dto/kitex_gen/paster/core"
 	"github.com/ameidance/paster_core/model/po"
 	"github.com/ameidance/paster_core/util"
 	"github.com/cloudwego/kitex/pkg/klog"
