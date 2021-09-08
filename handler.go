@@ -5,6 +5,8 @@ import (
 
 	"github.com/ameidance/paster_core/model/dto/kitex_gen/core"
 	"github.com/ameidance/paster_core/service"
+	"github.com/ameidance/paster_core/util"
+	"github.com/cloudwego/kitex/pkg/klog"
 )
 
 // PasterCoreImpl implements the last service interface defined in the IDL.
@@ -12,27 +14,42 @@ type PasterCoreImpl struct{}
 
 // GetPost implements the PasterCoreImpl interface.
 func (s *PasterCoreImpl) GetPost(ctx context.Context, req *core.GetPostRequest) (resp *core.GetPostResponse, err error) {
-	return service.GetPost(ctx, req), nil
+	klog.Infof("[GetPost] req:%v", util.GetJsonString(req))
+	resp = service.GetPost(ctx, req)
+	klog.Infof("[GetPost] resp:%v", util.GetJsonString(resp))
+	return
 }
 
 // SavePost implements the PasterCoreImpl interface.
 func (s *PasterCoreImpl) SavePost(ctx context.Context, req *core.SavePostRequest) (resp *core.SavePostResponse, err error) {
-	return service.SavePost(ctx, req), nil
+	klog.Infof("[SavePost] req:%v", util.GetJsonString(req))
+	resp = service.SavePost(ctx, req)
+	klog.Infof("[SavePost] resp:%v", util.GetJsonString(resp))
+	return
 }
 
 // DeletePost implements the PasterCoreImpl interface.
 func (s *PasterCoreImpl) DeletePost(ctx context.Context, req *core.DeletePostRequest) (resp *core.DeletePostResponse, err error) {
-	return service.DeletePost(ctx, req), nil
+	klog.Infof("[DeletePost] req:%v", util.GetJsonString(req))
+	resp = service.DeletePost(ctx, req)
+	klog.Infof("[DeletePost] resp:%v", util.GetJsonString(resp))
+	return
 }
 
 // GetComments implements the PasterCoreImpl interface.
 func (s *PasterCoreImpl) GetComments(ctx context.Context, req *core.GetCommentsRequest) (resp *core.GetCommentsResponse, err error) {
-	return service.GetComments(ctx, req), nil
+	klog.Infof("[GetComments] req:%v", util.GetJsonString(req))
+	resp = service.GetComments(ctx, req)
+	klog.Infof("[GetComments] resp:%v", util.GetJsonString(resp))
+	return
 }
 
 // SaveComment implements the PasterCoreImpl interface.
 func (s *PasterCoreImpl) SaveComment(ctx context.Context, req *core.SaveCommentRequest) (resp *core.SaveCommentResponse, err error) {
-	return service.SaveComment(ctx, req), nil
+	klog.Infof("[SaveComment] req:%v", util.GetJsonString(req))
+	resp = service.SaveComment(ctx, req)
+	klog.Infof("[SaveComment] resp:%v", util.GetJsonString(resp))
+	return
 }
 
 // Check implements the PasterCoreImpl interface.
