@@ -1,5 +1,5 @@
 package constant
 
 const (
-	SERVICE_NAME = "ameidance.paster.core"
+	SERVICE_NAME = "paster_core"
 )

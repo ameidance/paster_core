@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-RUN_NAME="ameidance.paster.core"
+RUN_NAME="paster_core"
 
 mkdir -p output/bin output/conf
 cp script/* output/

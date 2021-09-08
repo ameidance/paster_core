@@ -19,7 +19,7 @@ func init() {
 
 	rand.Seed(time.Now().Unix())
 	SetServiceName(constant.SERVICE_NAME)
-	SetInstanceId(fmt.Sprintf("%s %d", constant.SERVICE_NAME, rand.Int()))
+	SetInstanceId(fmt.Sprintf("%s_%d", constant.SERVICE_NAME, rand.Int()))
 }
 
 func SetServiceName(name string) {
