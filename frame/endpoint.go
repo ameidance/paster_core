@@ -47,6 +47,5 @@ func GetInstanceId() string {
 	if EBI == nil || EBI.Tags == nil {
 		return ""
 	}
-	id, _ := EBI.Tags["id"]
-	return id
+	return EBI.Tags["id"]
 }
