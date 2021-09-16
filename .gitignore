@@ -3,3 +3,4 @@ output
 vendor
 conf/*.yml
 !conf/*.example.yml
+*.DS_Store
