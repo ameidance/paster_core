@@ -56,7 +56,7 @@ func (m *ConsulRegistry) Register(info *registry.Info) (err error) {
 	registration.ID = frame.GetInstanceId()
 	registration.Name = frame.GetServiceName()
 	registration.Address = util.GetInternalIP()
-	_, err = fmt.Sscanf(info.Addr.String(), ":%v", &registration.Port)
+	_, err = fmt.Sscanf(info.Addr.String(), "[::]:%v", &registration.Port)
 	if err != nil {
 		klog.Errorf("[ConsulRegistry -> Register] get registry info addr port failed. err:%v", err)
 		return
