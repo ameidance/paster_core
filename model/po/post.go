@@ -307,7 +307,7 @@ func (po *Post) ConvertFromDTO(dto *core.PostInfo, password string) error {
 
 func (po *Post) ValidatePassword(password string) bool {
 	if len(po.Passwd) == 0 {
-		return true
+		return len(password) == 0
 	}
-	return util.GetMd5String([]byte(password)) == po.Passwd
+	return len(password) > 0 && util.GetMd5String([]byte(password)) == po.Passwd
 }

@@ -28,7 +28,7 @@ func GetPost(ctx context.Context, req *core.GetPostRequest) *core.GetPostRespons
 		return resp
 	}
 	// validate
-	if postPO.ValidatePassword(req.GetPassword()) {
+	if !postPO.ValidatePassword(req.GetPassword()) {
 		util.FillBizResp(resp, constant.ERR_WRONG_PASSWORD)
 		return resp
 	}
