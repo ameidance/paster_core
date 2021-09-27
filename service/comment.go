@@ -28,7 +28,7 @@ func GetComments(ctx context.Context, req *core.GetCommentsRequest) *core.GetCom
 		return resp
 	}
 	// validate
-	if (len(postPO.Passwd) == 0 && len(req.GetPassword()) > 0) || (len(postPO.Passwd) > 0 && util.GetMd5String([]byte(req.GetPassword())) != postPO.Passwd) {
+	if postPO.ValidatePassword(req.GetPassword()) {
 		util.FillBizResp(resp, constant.ERR_WRONG_PASSWORD)
 		return resp
 	}
@@ -67,7 +67,7 @@ func SaveComment(ctx context.Context, req *core.SaveCommentRequest) *core.SaveCo
 		return resp
 	}
 	// validate
-	if len(postPO.Passwd) > 0 && util.GetMd5String([]byte(req.GetPassword())) != postPO.Passwd {
+	if postPO.ValidatePassword(req.GetPassword()) {
 		util.FillBizResp(resp, constant.ERR_WRONG_PASSWORD)
 		return resp
 	}

@@ -304,3 +304,10 @@ func (po *Post) ConvertFromDTO(dto *core.PostInfo, password string) error {
 
 	return nil
 }
+
+func (po *Post) ValidatePassword(password string) bool {
+	if len(po.Passwd) == 0 {
+		return true
+	}
+	return util.GetMd5String([]byte(password)) == po.Passwd
+}
