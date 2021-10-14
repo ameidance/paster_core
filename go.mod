@@ -3,7 +3,7 @@ module github.com/ameidance/paster_core
 go 1.15
 
 require (
-	github.com/cloudwego/kitex v0.0.5
+	github.com/cloudwego/kitex v0.0.6
 	github.com/hashicorp/consul/api v1.10.1
 	github.com/json-iterator/go v1.1.12
 	google.golang.org/protobuf v1.27.1
